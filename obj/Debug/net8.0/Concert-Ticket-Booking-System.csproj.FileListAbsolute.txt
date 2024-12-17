@@ -12,3 +12,4 @@ C:\Users\Igor\RiderProjects\Concert-Ticket-Booking-System\Concert-Ticket-Booking
 C:\Users\Igor\RiderProjects\Concert-Ticket-Booking-System\Concert-Ticket-Booking-System\obj\Debug\net8.0\Concert-Ticket-Booking-System.pdb
 C:\Users\Igor\RiderProjects\Concert-Ticket-Booking-System\Concert-Ticket-Booking-System\obj\Debug\net8.0\Concert-Ticket-Booking-System.genruntimeconfig.cache
 C:\Users\Igor\RiderProjects\Concert-Ticket-Booking-System\Concert-Ticket-Booking-System\obj\Debug\net8.0\ref\Concert-Ticket-Booking-System.dll
+C:\Users\Igor\RiderProjects\Concert-Ticket-Booking-System\Concert-Ticket-Booking-System\obj\Debug\net8.0\Concert-Ticket-Booking-System.sourcelink.json

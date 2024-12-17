@@ -1,19 +1,4 @@
 ﻿using System.Security.Cryptography;
-
-class Concert() : IConcert
-{
-    public string Name {get; set;}
-    public string Date {get; set;}
-    public string Location {get; set;}
-    public int AvailableSeats {get; set;}
-    public decimal TicketPrice {get; set;}
-    
-    // public virtual void tekst() 
-    // {
-    //     Console.WriteLine($"{Name} on {Date} at {Location}. Tickets: {AvailableSeats} available at {TicketPrice} each.");
-    // }
-    
-}
 interface IConcert
 {
     string Name { get; set; }
@@ -21,39 +6,25 @@ interface IConcert
     string Date { get; set; }
     int AvailableSeats { get; set; }
     decimal TicketPrice { get; set; }
-    //void tekst();
 }
 
-class RegularConcert : IConcert
+class Concert : IConcert
 {
-    public string Name { get; set; }
-    public string Location { get; set; }
-    public string Date { get; set; }
-    public int AvailableSeats { get; set; }
-    public decimal TicketPrice { get; set; }
-
-    // public void tekst()
-    // {
-    //     Console.WriteLine($"Regular Concert: {Name} on {Date} at {Location}. Tickets: {AvailableSeats} available at {TicketPrice} each.");
-    // }
+    public string Name {get; set;}
+    public string Date {get; set;}
+    public string Location {get; set;}
+    public int AvailableSeats {get; set;}
+    public decimal TicketPrice {get; set;}
 }
 
-class VIPConcert : IConcert
-{
-    public string Name { get; set; }
-    public string Location { get; set; }
-    public string Date { get; set; }
-    public int AvailableSeats { get; set; }
-    public decimal TicketPrice { get; set; }
+class RegularConcert : Concert {}
+
+class VIPConcert : Concert
+{ 
     public string Spotkanie { get; set; }
-
-    // public void tekst()
-    // {
-    //     Console.WriteLine($"VIP Concert: {Name} on {Date} at {Location}. Tickets: {AvailableSeats} available at {TicketPrice} with {Spotkanie}.");
-    // }
 }
 
-class OnLineConcert : IConcert
+class OnLineConcert : Concert
 {
     public string Name { get; set; }
     public string Location { get; set; }
@@ -61,26 +32,11 @@ class OnLineConcert : IConcert
     public int AvailableSeats { get; set; }
     public decimal TicketPrice { get; set; }
     public string Platforma { get; set; }
-
-    // public void tekst()
-    // {
-    //     Console.WriteLine($"Online Concert: {Name} on {Date}. Streaming via {Platforma}. Tickets: {AvailableSeats} available at {TicketPrice} each.");
-    // }
 }
 
-class PrivateConcert : IConcert
+class PrivateConcert : Concert
 {
-    public string Name { get; set; }
-    public string Location { get; set; }
-    public string Date { get; set; }
-    public int AvailableSeats { get; set; }
-    public decimal TicketPrice { get; set; }
     public string Zaproszenie { get; set; }
-
-    // public void tekst()
-    // {
-    //     Console.WriteLine($"Private Concert: {Name} w {Location} dnia {Date} trzeba posiadać: {Zaproszenie}.");
-    // }
 }
 
 class BookingSystem
@@ -130,10 +86,9 @@ class BookingSystem
                 Console.WriteLine("Podaj ilość miejsc: ");
                 concert.AvailableSeats = int.Parse(Console.ReadLine());
 
-                Console.WriteLine("Podaj cene biletu: ");
+                Console.WriteLine("Podaj cene biletu [zl]: ");
                 concert.TicketPrice = decimal.Parse(Console.ReadLine());
-                
-                
+
                 if (concert is VIPConcert vipConcert)
                 {
                     Console.WriteLine("Sczegóły spotkań: ");
@@ -159,11 +114,79 @@ class BookingSystem
         }
     }
 
+    public void Szukaj()
+        {
+            Console.WriteLine("Aby wyszukać koncert na podstawie daty, wpisz: 1 \nAby wyszukać na podstawie lokalizacji, wpisz: 2 \nAby wyszukać na podstawie ceny, wpisz: 3");
+            string wybor = Console.ReadLine();
+
+            switch (wybor)
+            {
+                case "1":
+                    Console.WriteLine("Podaj datę w formacie DD-MM-YYYY:");
+                    string data = Console.ReadLine();
+                    
+                    var koncertyData = concerts.Where(c => c.Date == data).ToList();
+
+                    if (koncertyData.Any())
+                    {
+                        foreach (var concert in koncertyData)
+                        {
+                            Console.WriteLine($"Koncerty dnia {data}: \n {concert.Name} - {concert.Date} - {concert.Location}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Brak koncertow");
+                    }
+                    break;
+                
+                case "2":
+                    Console.WriteLine("Podaj miejsce koncertu w formacie: Miasto, Kraj");
+                    string miejsce = Console.ReadLine();
+                    
+                    var koncertyLokalizacja = concerts.Where(c => c.Location == miejsce).ToList();
+
+                    if (koncertyLokalizacja.Any())
+                    {
+                        foreach (var concert in koncertyLokalizacja)
+                        {
+                            Console.WriteLine($"Koncerty w {miejsce}: \n {concert.Name} - {concert.Date} - {concert.Location}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Brak koncertow");
+                    }
+                    break;
+                case "3":
+                    Console.WriteLine("Podaj max cene koncertu [zl]");
+                    decimal cena = Decimal.Parse(Console.ReadLine());
+                    
+                    var koncertyCena = concerts.Where(c => c.TicketPrice <= cena).ToList();
+
+                    if (koncertyCena.Any())
+                    {
+                        foreach (var concert in koncertyCena)
+                        {
+                            Console.WriteLine($"Koncerty w cenie max {cena}: \n {concert.Name} - {concert.Date} - {concert.Location}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Brak koncertow");
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Blad!");
+                    break;
+            }
+        }
+    
+
     public void Rezerwacja()
     {
         Console.WriteLine("Podaj nazwę koncertu, na który chcesz zarezerwować bilety:");
         string concertName = Console.ReadLine();
-
         foreach (var concert in concerts)
         {
             if (concert.Name == concertName)
@@ -183,26 +206,25 @@ class BookingSystem
             }
         }
     }
-
     public void Wyswietl()
     {
         Console.WriteLine("Dostępne koncerty:");
         foreach (var concert in concerts)
         {
             if(concert is VIPConcert vipConcert){
-                Console.WriteLine($"{concert.Name} - {concert.Date} w {concert.Location} ({concert.AvailableSeats} miejsc dostępnych), Spotkania: {vipConcert.Spotkanie}");
+                Console.WriteLine($"{concert.Name} - {concert.Date} w {concert.Location} ({concert.AvailableSeats} miejsc dostępnych, cena: {concert.TicketPrice}), Spotkania: {vipConcert.Spotkanie}");
             }
             else if (concert is OnLineConcert onLineConcert)
             {
-                Console.WriteLine($"{concert.Name} - {concert.Date} w {concert.Location} ({concert.AvailableSeats} miejsc dostępnych, Platforma: {onLineConcert.Platforma})");
+                Console.WriteLine($"{concert.Name} - {concert.Date} w {concert.Location} ({concert.AvailableSeats} miejsc dostępnych, cena: {concert.TicketPrice}, Platforma: {onLineConcert.Platforma})");
             }
             else if (concert is PrivateConcert privateConcert)
             {
-                Console.WriteLine($"{concert.Name} - {concert.Date} w {concert.Location} ({concert.AvailableSeats} miejsc dostępnych), Zaproszenie: {privateConcert.Zaproszenie}");
+                Console.WriteLine($"{concert.Name} - {concert.Date} w {concert.Location} ({concert.AvailableSeats} miejsc dostępnych), cena: {concert.TicketPrice} Zaproszenie: {privateConcert.Zaproszenie}");
             }
-            else if (concert is RegularConcert regularConcert)
+            else if (concert is RegularConcert)
             {
-                Console.WriteLine($"{concert.Name} - {concert.Date} w {concert.Location} ({concert.AvailableSeats} miejsc dostępnych)");
+                Console.WriteLine($"{concert.Name} - {concert.Date} w {concert.Location} ({concert.AvailableSeats} miejsc dostępnych, cena: {concert.TicketPrice})");
             }
             else
             {
@@ -211,7 +233,6 @@ class BookingSystem
         }
     }
 }
-
 internal class Program
 {
     public static void Main(string[] args)
@@ -220,7 +241,7 @@ internal class Program
         Console.WriteLine("Wybierz opcje i kliknij enter");
         while (true)
         {
-            Console.WriteLine("1. Dodaj koncert\n2. Zarezerwuj bilet\n3. Wyświetl koncerty\n4. Wyjście");
+            Console.WriteLine("1. Dodaj koncert\n2. Wyświetl koncerty\n3. Zarezerwuj bilet\n4. Filtruj koncerty \n5. Wyjście");
             string wybor = Console.ReadLine();
 
             switch (wybor)
@@ -229,12 +250,15 @@ internal class Program
                     bookingSystem.Dodaj();
                     break;
                 case "2":
-                    bookingSystem.Rezerwacja();
-                    break;
-                case "3":
                     bookingSystem.Wyswietl();
                     break;
+                case "3":
+                    bookingSystem.Rezerwacja();
+                    break;
                 case "4":
+                    bookingSystem.Szukaj();
+                    break;
+                case "5":
                     return;
                 default:
                     Console.WriteLine("Blad!");
