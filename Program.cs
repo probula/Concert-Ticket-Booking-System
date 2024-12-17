@@ -199,10 +199,19 @@ class BookingSystem
                     concert.AvailableSeats -= seats;
                     Console.WriteLine($"Zarezerwowano {seats} miejsc. Pozostało {concert.AvailableSeats} miejsc.");
                 }
+
+                if (concert.AvailableSeats <= 10)
+                {
+                    Console.WriteLine("Uwaga! Pozostało mniej niz 10 biletów!");
+                }
                 else
                 {
                     Console.WriteLine("Niewystarczająca liczba miejsc.");
                 }
+            }
+            else
+            {
+                Console.WriteLine("Nieprawidłowa nazwa!");
             }
         }
     }
@@ -229,8 +238,11 @@ class BookingSystem
                     Console.WriteLine("Blad!");
                 }
             }
+            else
+            {
+                Console.WriteLine("Nieprawidłowa nazwa!");
+            }
         }
-        
     }
     public void Wyswietl()
     {
