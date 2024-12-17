@@ -81,7 +81,7 @@ class BookingSystem
                 concert.Date = Console.ReadLine();
 
                 Console.WriteLine("Podaj lokalizacje koncertu: ");
-                concert.Location = Console.ReadLine();
+                concert.Location = Console.ReadLine().ToLower();
 
                 Console.WriteLine("Podaj ilość miejsc: ");
                 concert.AvailableSeats = int.Parse(Console.ReadLine());
@@ -142,7 +142,7 @@ class BookingSystem
                 
                 case "2":
                     Console.WriteLine("Podaj miejsce koncertu w formacie: Miasto, Kraj");
-                    string miejsce = Console.ReadLine();
+                    string miejsce = Console.ReadLine().ToLower();
                     
                     var koncertyLokalizacja = concerts.Where(c => c.Location == miejsce).ToList();
 
@@ -168,7 +168,7 @@ class BookingSystem
                     {
                         foreach (var concert in koncertyCena)
                         {
-                            Console.WriteLine($"Koncerty w cenie max {cena}: \n {concert.Name} - {concert.Date} - {concert.Location}");
+                            Console.WriteLine($"Koncerty w cenie max {cena}: \n {concert.Name} - {concert.Date} - {concert.Location}, cena: {concert.TicketPrice}");
                         }
                     }
                     else
@@ -206,6 +206,32 @@ class BookingSystem
             }
         }
     }
+
+    public void AnulujRezerwacja()
+    {
+        Console.WriteLine("Podaj nazwę koncertu, na który chcesz anulować rezerwację:");
+        string nazwaAnulujKoncert = Console.ReadLine();
+
+        foreach (var concert in concerts)
+        {
+            if (concert.Name == nazwaAnulujKoncert)
+            {
+                Console.WriteLine("Podaj liczbę miejsc do anulowania:");
+                int miejsca = int.Parse(Console.ReadLine());
+
+                if (miejsca > 0 && miejsca <= concert.AvailableSeats)
+                {
+                    concert.AvailableSeats += miejsca;
+                    Console.WriteLine($"Anulowano {miejsca} miejsc. Pozostało {concert.AvailableSeats} miejsc.");
+                }
+                else
+                {
+                    Console.WriteLine("Blad!");
+                }
+            }
+        }
+        
+    }
     public void Wyswietl()
     {
         Console.WriteLine("Dostępne koncerty:");
@@ -241,7 +267,7 @@ internal class Program
         Console.WriteLine("Wybierz opcje i kliknij enter");
         while (true)
         {
-            Console.WriteLine("1. Dodaj koncert\n2. Wyświetl koncerty\n3. Zarezerwuj bilet\n4. Filtruj koncerty \n5. Wyjście");
+            Console.WriteLine("1. Dodaj koncert\n2. Wyświetl koncerty\n3. Zarezerwuj bilet\n4. Anuluj rezerwację \n5. Filtruj koncerty \n6. Wyjście");
             string wybor = Console.ReadLine();
 
             switch (wybor)
@@ -256,9 +282,12 @@ internal class Program
                     bookingSystem.Rezerwacja();
                     break;
                 case "4":
-                    bookingSystem.Szukaj();
+                    bookingSystem.AnulujRezerwacja();
                     break;
                 case "5":
+                    bookingSystem.Szukaj();
+                    break;
+                case "6":
                     return;
                 default:
                     Console.WriteLine("Blad!");
